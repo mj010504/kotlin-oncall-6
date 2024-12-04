@@ -3,7 +3,7 @@ package oncall.domain
 import oncall.utils.Validator
 
 class OnCallOrder(
-    private val weekdayOrder: List<String>, private val holidayOrder: List<String>
+     val weekdayOrder: MutableList<String>,  val holidayOrder: MutableList<String>
 ) {
     init {
         validateDuplicatedName()
