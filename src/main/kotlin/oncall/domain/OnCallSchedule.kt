@@ -3,7 +3,7 @@ package oncall.domain
 import oncall.constant.DayOfWeek
 import oncall.utils.Validator.getErrorMessage
 
-class OnCallSchedule(private val month: Int, private val startDay: String) {
+class OnCallSchedule(val month: Int, val startDay: String) {
     init {
         validateMonth()
         validateStartDay()
