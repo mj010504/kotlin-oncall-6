@@ -26,6 +26,5 @@ class OnCallOrder(
     companion object {
         private const val INVALID_DUPLICATED_NAME = "순번에 중복된 이름이 존재합니다."
         private const val  INVALID_ORDER_NAMES = "평일 순번과 휴일 순번 인원들의 이름이 일치하지 않습니다."
-        private const val INVALID_ORDER = "유효하지 않은 순번 입력입니다."
     }
 }
