@@ -1,6 +1,5 @@
 package oncall.domain
 
-import com.sun.tools.javac.jvm.ByteCodes.swap
 import oncall.constant.MonthInfo.Companion.getMonthInfo
 import oncall.constant.DayOfWeek.Companion.getDayOfWeek
 import oncall.constant.DayType
@@ -11,13 +10,15 @@ import oncall.utils.swap
 class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSchedule) {
 
     val graph: MutableList<Pair<String, String>> = mutableListOf()
-
     init {
         makeGraph()
     }
 
     private fun makeGraph() {
+
         val monthInfo = getMonthInfo(schedule.month)
+        val size = order.weekdayOrder.size
+
         var currentDayOfWeek = getDayOfWeek(schedule.startDay)
         var weekdayOrderIndex = 0
         var holidayOrderIndex = 0
@@ -27,12 +28,16 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
             val dayType = DayType.convertToDayType(schedule.month, day, currentDayOfWeek)
             val dayOfWeek = if (dayType == PUBLIC_HOLIDAY) PUBLIC_HOLIDAY_FORMAT.format(currentDayOfWeek.day) else currentDayOfWeek.day
             val person = if(dayType == WEEKDAY) {
-                weekdayOrderIndex++
-                getWeekDayOrderPerson(prevPerson, weekdayOrderIndex)
+                val tempIndex = weekdayOrderIndex
+                weekdayOrderIndex = (weekdayOrderIndex + 1) % size
+                getWeekDayOrderPerson(prevPerson, tempIndex)
+
             } else {
-                holidayOrderIndex++
-                getHolidayOrderPerson(prevPerson, holidayOrderIndex)
+                val tempIndex = weekdayOrderIndex
+                holidayOrderIndex = (holidayOrderIndex + 1) % size
+                getHolidayOrderPerson(prevPerson, tempIndex)
             }
+
             graph.add(
                 Pair(
                     DATE_FORMAT.format(schedule.month, day, currentDayOfWeek.day, dayOfWeek),

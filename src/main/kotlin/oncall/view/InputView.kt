@@ -38,13 +38,13 @@ object InputView {
         }
     }
 
-    private fun getWeekDayOrder() : List<String> {
+    private fun getWeekDayOrder() : MutableList<String> {
         println(ON_CALL_WEEKDAY_ORDER_SCRIPT)
-        return Console.readLine().split(",")
+        return Console.readLine().split(",").toMutableList()
     }
 
-    private fun getHoliDayOrder() : List<String> {
+    private fun getHoliDayOrder() : MutableList<String> {
         println(ON_CALL_HOLIDAY_ORDER_SCRIPT)
-        return Console.readLine().split(",")
+        return Console.readLine().split(",").toMutableList()
     }
 }
