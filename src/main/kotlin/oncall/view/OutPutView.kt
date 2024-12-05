@@ -2,8 +2,11 @@ package oncall.view
 
 object OutPutView {
     fun printOnCallGraph(graph : MutableList<Pair<String, String>>) {
+        var onCallGraph = ""
         for(lable in graph) {
-            println("${lable.first} ${lable.second}")
+            onCallGraph += "${lable.first} ${lable.second}\n"
         }
+        println(onCallGraph)
     }
+
 }
