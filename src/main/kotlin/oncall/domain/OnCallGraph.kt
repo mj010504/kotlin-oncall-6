@@ -15,7 +15,6 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
     }
 
     private fun makeGraph() {
-
         val monthInfo = getMonthInfo(schedule.month)
         val size = order.weekdayOrder.size
 
