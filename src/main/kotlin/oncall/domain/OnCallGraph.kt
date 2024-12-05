@@ -26,24 +26,35 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
 
         for (day in 1..monthInfo.end) {
             val dayType = DayType.convertToDayType(schedule.month, day, currentDayOfWeek)
-            val dayOfWeek = if (dayType == PUBLIC_HOLIDAY) PUBLIC_HOLIDAY_FORMAT.format(currentDayOfWeek.day) else currentDayOfWeek.day
             val person = if(dayType == WEEKDAY) {
                 val tempIndex = weekdayOrderIndex
                 weekdayOrderIndex = (weekdayOrderIndex + 1) % size
                 getWeekDayOrderPerson(prevPerson, tempIndex)
 
             } else {
-                val tempIndex = weekdayOrderIndex
+                val tempIndex = holidayOrderIndex
                 holidayOrderIndex = (holidayOrderIndex + 1) % size
                 getHolidayOrderPerson(prevPerson, tempIndex)
             }
 
-            graph.add(
-                Pair(
-                    DATE_FORMAT.format(schedule.month, day, currentDayOfWeek.day, dayOfWeek),
-                    person
+            if (dayType != PUBLIC_HOLIDAY) {
+                graph.add(
+                    Pair(
+                        DATE_FORMAT.format(schedule.month, day, currentDayOfWeek.day, currentDayOfWeek.day),
+                        person
+                    )
                 )
-            )
+            }
+            else {
+                graph.add(
+                    Pair(
+                        PUBLIC_HOLIDAY_DATE_FORMAT.format(schedule.month, day, currentDayOfWeek.day, currentDayOfWeek.day),
+                        person
+                    )
+                )
+            }
+
+
             currentDayOfWeek = currentDayOfWeek.nextDay()
             prevPerson = person
 
@@ -56,7 +67,7 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
     }
 
     private fun getHolidayOrderPerson(prevPerson : String, holidayOrderIndex : Int) : String {
-        if (prevPerson == order.weekdayOrder[holidayOrderIndex]) adjustHolidayOrder(holidayOrderIndex)
+        if (prevPerson == order.holidayOrder[holidayOrderIndex]) adjustHolidayOrder(holidayOrderIndex)
         return order.holidayOrder[holidayOrderIndex]
     }
 
@@ -70,7 +81,7 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
 
     companion object {
         private const val DATE_FORMAT = "%d월 %d일 %s"
-        private const val PUBLIC_HOLIDAY_FORMAT = "%s(휴일)"
+        private const val PUBLIC_HOLIDAY_DATE_FORMAT =  "%d월 %d일 %s(휴일)"
     }
 
 }

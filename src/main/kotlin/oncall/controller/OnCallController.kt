@@ -13,6 +13,5 @@ class OnCallController {
         printOnCallGraph(graph)
     }
 
-
 }
 
