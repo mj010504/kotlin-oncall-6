@@ -26,14 +26,13 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
             val dayType = DayType.convertToDayType(schedule.month, day, currentDayOfWeek)
             val person = if(dayType == WEEKDAY) {
                 val tempIndex = weekdayOrderIndex
-                weekdayOrderIndex = (weekdayOrderIndex + 1) % size
+                weekdayOrderIndex = incrementIndex(weekdayOrderIndex, size)
                 getWeekDayOrderPerson(prevPerson, tempIndex)
             } else {
                 val tempIndex = holidayOrderIndex
-                holidayOrderIndex = (holidayOrderIndex + 1) % size
+                holidayOrderIndex = incrementIndex(holidayOrderIndex, size)
                 getHolidayOrderPerson(prevPerson, tempIndex)
             }
-
             addToGraph(dayType, schedule.month, day, currentDayOfWeek, person)
             currentDayOfWeek = currentDayOfWeek.nextDay()
             prevPerson = person
@@ -64,6 +63,10 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
     private fun getHolidayOrderPerson(prevPerson : String, index : Int) : String {
         if (prevPerson == order.getHolidayOrderPerson(index)) order.adjustHoliDayOrder(index)
         return order.getHolidayOrderPerson(index)
+    }
+
+    private fun incrementIndex(currentIndex: Int, size: Int): Int {
+        return (currentIndex + 1) % size
     }
 
     companion object {
