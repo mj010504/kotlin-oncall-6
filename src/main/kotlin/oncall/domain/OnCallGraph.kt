@@ -1,5 +1,6 @@
 package oncall.domain
 
+import oncall.constant.DayOfWeek
 import oncall.constant.MonthInfo.Companion.getMonthInfo
 import oncall.constant.DayOfWeek.Companion.getDayOfWeek
 import oncall.constant.DayType
@@ -27,33 +28,32 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
                 val tempIndex = weekdayOrderIndex
                 weekdayOrderIndex = (weekdayOrderIndex + 1) % size
                 getWeekDayOrderPerson(prevPerson, tempIndex)
-
             } else {
                 val tempIndex = holidayOrderIndex
                 holidayOrderIndex = (holidayOrderIndex + 1) % size
                 getHolidayOrderPerson(prevPerson, tempIndex)
             }
 
-            if (dayType != PUBLIC_HOLIDAY) {
-                graph.add(
-                    Pair(
-                        DATE_FORMAT.format(schedule.month, day, currentDayOfWeek.day, currentDayOfWeek.day),
-                        person
-                    )
-                )
-            }
-            else {
-                graph.add(
-                    Pair(
-                        PUBLIC_HOLIDAY_DATE_FORMAT.format(schedule.month, day, currentDayOfWeek.day, currentDayOfWeek.day),
-                        person
-                    )
-                )
-            }
+            addToGraph(dayType, schedule.month, day, currentDayOfWeek, person)
             currentDayOfWeek = currentDayOfWeek.nextDay()
             prevPerson = person
 
         }
+    }
+
+    private fun addToGraph(
+        dayType: DayType,
+        month: Int,
+        day: Int,
+        currentDayOfWeek: DayOfWeek,
+        person: String
+    ) {
+        val formattedDate = if (dayType != PUBLIC_HOLIDAY) {
+            DATE_FORMAT.format(month, day, currentDayOfWeek.day, currentDayOfWeek.day)
+        } else {
+            PUBLIC_HOLIDAY_DATE_FORMAT.format(month, day, currentDayOfWeek.day, currentDayOfWeek.day)
+        }
+        graph.add(Pair(formattedDate, person))
     }
 
     private fun getWeekDayOrderPerson(prevPerson : String, index : Int) : String {

@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource
 class MonthInfoTest{
     @ParameterizedTest
     @MethodSource("provideMothAndDayCount")
-    fun `각 월이 가지는 총 일수를 올바르게 반환한다`(pair: Pair<Int, Int>) {
+    fun `각 월이 가지는 총 일수를 올바르게     반환한다`(pair: Pair<Int, Int>) {
        val monthInfo =  MonthInfo.getMonthInfo(pair.first)
         assertEquals(monthInfo.end ,pair.second)
     }
