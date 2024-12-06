@@ -5,7 +5,6 @@ import oncall.constant.DayOfWeek.Companion.getDayOfWeek
 import oncall.constant.DayType
 import oncall.constant.DayType.PUBLIC_HOLIDAY
 import oncall.constant.DayType.WEEKDAY
-import oncall.utils.swap
 
 class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSchedule) {
 
@@ -16,8 +15,7 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
 
     private fun makeGraph() {
         val monthInfo = getMonthInfo(schedule.month)
-        val size = order.weekdayOrder.size
-
+        val size = order.getOrderCount()
         var currentDayOfWeek = getDayOfWeek(schedule.startDay)
         var weekdayOrderIndex = 0
         var holidayOrderIndex = 0
@@ -52,30 +50,20 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
                     )
                 )
             }
-
-
             currentDayOfWeek = currentDayOfWeek.nextDay()
             prevPerson = person
 
         }
     }
 
-    private fun getWeekDayOrderPerson(prevPerson : String, weekdayOrderIndex : Int) : String {
-        if (prevPerson == order.weekdayOrder[weekdayOrderIndex]) adjustWeekDayOrder(weekdayOrderIndex)
-        return order.weekdayOrder[weekdayOrderIndex]
+    private fun getWeekDayOrderPerson(prevPerson : String, index : Int) : String {
+        if (prevPerson == order.getWeekdayOrderPerson(index)) order.adjustWeekDayOrder(index)
+        return order.getWeekdayOrderPerson(index)
     }
 
-    private fun getHolidayOrderPerson(prevPerson : String, holidayOrderIndex : Int) : String {
-        if (prevPerson == order.holidayOrder[holidayOrderIndex]) adjustHolidayOrder(holidayOrderIndex)
-        return order.holidayOrder[holidayOrderIndex]
-    }
-
-    private fun adjustWeekDayOrder(weekdayOrderIndex: Int) {
-        order.weekdayOrder.swap(weekdayOrderIndex)
-    }
-
-    private fun adjustHolidayOrder(holidayOrderIndex: Int) {
-        order.holidayOrder.swap(holidayOrderIndex)
+    private fun getHolidayOrderPerson(prevPerson : String, index : Int) : String {
+        if (prevPerson == order.getHolidayOrderPerson(index)) order.adjustHoliDayOrder(index)
+        return order.getHolidayOrderPerson(index)
     }
 
     companion object {
