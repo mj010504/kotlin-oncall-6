@@ -1,9 +1,10 @@
 package oncall.domain
 
 import oncall.constant.DayOfWeek
+import oncall.constant.MonthInfo
 import oncall.utils.Validator.getErrorMessage
 
-class OnCallSchedule(val month: Int, val startDay: String) {
+class OnCallSchedule(private val month: Int,private val startDay: String) {
     init {
         validateMonth()
         validateStartDay()
@@ -20,6 +21,10 @@ class OnCallSchedule(val month: Int, val startDay: String) {
             getErrorMessage(INVALID_START_DAY)
         }
     }
+
+    fun getMonthInfo(): MonthInfo = MonthInfo.getMonthInfo(month)
+
+    fun getDayOfWeek() : DayOfWeek = DayOfWeek.getDayOfWeek(startDay)
 
     companion object {
         private const val MIN_MONTH = 1

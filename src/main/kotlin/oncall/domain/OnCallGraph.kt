@@ -15,25 +15,25 @@ class OnCallGraph(private val order: OnCallOrder, private val schedule: OnCallSc
     }
 
     private fun makeGraph() {
-        val monthInfo = getMonthInfo(schedule.month)
-        val size = order.getOrderCount()
-        var currentDayOfWeek = getDayOfWeek(schedule.startDay)
+        val monthInfo = schedule.getMonthInfo()
+        val orderCount = order.getOrderCount()
+        var currentDayOfWeek = schedule.getDayOfWeek()
         var weekdayOrderIndex = 0
         var holidayOrderIndex = 0
         var prevPerson  = ""
 
         for (day in 1..monthInfo.end) {
-            val dayType = DayType.convertToDayType(schedule.month, day, currentDayOfWeek)
+            val dayType = DayType.convertToDayType(monthInfo.month, day, currentDayOfWeek)
             val person = if(dayType == WEEKDAY) {
                 val tempIndex = weekdayOrderIndex
-                weekdayOrderIndex = incrementIndex(weekdayOrderIndex, size)
+                weekdayOrderIndex = incrementIndex(weekdayOrderIndex, orderCount)
                 getWeekDayOrderPerson(prevPerson, tempIndex)
             } else {
                 val tempIndex = holidayOrderIndex
-                holidayOrderIndex = incrementIndex(holidayOrderIndex, size)
+                holidayOrderIndex = incrementIndex(holidayOrderIndex, orderCount)
                 getHolidayOrderPerson(prevPerson, tempIndex)
             }
-            addToGraph(dayType, schedule.month, day, currentDayOfWeek, person)
+            addToGraph(dayType, monthInfo.month, day, currentDayOfWeek, person)
             currentDayOfWeek = currentDayOfWeek.nextDay()
             prevPerson = person
 
